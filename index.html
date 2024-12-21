@@ -5,17 +5,23 @@
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'"
+      content="script-src 'self'; style-src 'self' 'unsafe-inline'"
     />
     <link href="./styles.css" rel="stylesheet" />
     <title>Image Downloader</title>
   </head>
   <body>
-    <h1>Hello World!</h1>
-    We are using Node.js <span id="node-version"></span>, Chromium
-    <span id="chrome-version"></span>, and Electron
-    <span id="electron-version"></span>.
-
+    <label>
+      Target URL:<input
+        type="text"
+        id="input-url"
+        value="http://localhost:3000"
+      />
+    </label>
+    <button id="btn-get">Get</button>
+    <button id="btn-save">Save</button>
+    <div id="msg"></div>
+    <div id="result"></div>
     <!-- You can also require other files to run in this process -->
     <script src="./renderer.js"></script>
   </body>
