@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@playwright/test": "^1.49.1",
+    "image-downloader": "^4.3.0",
     "playwright": "^1.49.1"
   }
 }

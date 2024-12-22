@@ -30,7 +30,7 @@ $btnGet.addEventListener("click", async () => {
 
 $btnSave.addEventListener("click", async () => {
   // 画像の保存の処理
-  const result = await window.imgGl.saveImgs(); //"success", "failed", "cancell"
+  const result = await window.imgDl.saveImgs(); //"success", "failed", "cancell"
   console.log(result);
   const MSGs = {
     success: "画像の保存に成功しました",

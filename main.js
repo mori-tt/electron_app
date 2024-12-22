@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog, shell } = require("electron");
 const path = require("path");
 
 function createWindow() {
@@ -43,6 +43,9 @@ app.on("window-all-closed", function () {
 // code. You can also put them in separate files and require them here.
 
 const { chromium } = require("@playwright/test");
+const download = require("image-downloader");
+
+let imgUrls;
 async function fetchImgs(event, targetUrl) {
   const browser = await chromium.launch({ headless: false, slowMo: 500 });
   const page = await browser.newPage();
@@ -50,7 +53,7 @@ async function fetchImgs(event, targetUrl) {
   const imgLocators = page.locator("img");
   const imgCount = await imgLocators.count();
 
-  const imgUrls = [];
+  imgUrls = [];
   for (let i = 0; i < imgCount; i++) {
     const imgLocator = imgLocators.locator(`nth=${i}`);
     const imgSrc = await imgLocator.evaluate((node) => node.currentSrc);
@@ -63,7 +66,36 @@ async function fetchImgs(event, targetUrl) {
 }
 
 async function saveImgs() {
-  return "I'm saveImgs";
+  const win = BrowserWindow.getFocusedWindow();
+  const pathResult = await dialog.showOpenDialog(win, {
+    properties: ["openDirectory"],
+    defaultPath: ".",
+  });
+
+  if (pathResult.canceled) return "cancel";
+
+  const dest = pathResult.filePaths[0];
+
+  try {
+    for (const url of imgUrls) {
+      await download
+        .image({ url, dest })
+        .then(function (result) {
+          console.log("success : ", result);
+        })
+        .catch(function (e) {
+          console.error("error occured : ", e);
+        });
+    }
+  } catch (e) {
+    return "failed";
+  }
+
+  setTimeout(() => {
+    shell.openPath(dest);
+  }, 2000);
+
+  return "success";
 }
 
 ipcMain.handle("fetchImgs", fetchImgs);
