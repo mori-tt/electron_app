@@ -12,15 +12,13 @@ const $inputUrl = document.querySelector("#input-url");
 const $msg = document.querySelector("#msg");
 const $result = document.querySelector("#result");
 
-$btnGet.addEventListener("click", () => {
+$btnGet.addEventListener("click", async () => {
   const targetUrl = $inputUrl.value;
 
   // ブラウザ->画像URL一覧を取得
-  const imgUrls = [
-    "http://localhost:3000/villa-1.jpg",
-    "http://localhost:3000/villa-2.jpg",
-  ];
+  const imgUrls = await window.imgDl.fetchImgs(targetUrl);
 
+  console.log(imgUrls);
   let imgHtmlStr = "";
 
   for (const url of imgUrls) {
@@ -30,9 +28,10 @@ $btnGet.addEventListener("click", () => {
   $result.innerHTML = imgHtmlStr;
 });
 
-$btnSave.addEventListener("click", () => {
+$btnSave.addEventListener("click", async () => {
   // 画像の保存の処理
-  const result = "success"; //"failed", "cancell"
+  const result = await window.imgGl.saveImgs(); //"success", "failed", "cancell"
+  console.log(result);
   const MSGs = {
     success: "画像の保存に成功しました",
     failed: "画像の保存に失敗しました",
