@@ -20,5 +20,9 @@
   "devDependencies": {
     "electron": "^21.1.1",
     "nodemon": "^3.1.9"
+  },
+  "dependencies": {
+    "@playwright/test": "^1.49.1",
+    "playwright": "^1.49.1"
   }
 }

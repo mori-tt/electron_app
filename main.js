@@ -42,8 +42,24 @@ app.on("window-all-closed", function () {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
+const { chromium } = require("@playwright/test");
 async function fetchImgs(event, targetUrl) {
-  return "I'm fetchImgs:" + targetUrl + ".";
+  const browser = await chromium.launch({ headless: false, slowMo: 500 });
+  const page = await browser.newPage();
+  await page.goto(targetUrl);
+  const imgLocators = page.locator("img");
+  const imgCount = await imgLocators.count();
+
+  const imgUrls = [];
+  for (let i = 0; i < imgCount; i++) {
+    const imgLocator = imgLocators.locator(`nth=${i}`);
+    const imgSrc = await imgLocator.evaluate((node) => node.currentSrc);
+    imgUrls.push(imgSrc);
+  }
+
+  await browser.close();
+
+  return imgUrls;
 }
 
 async function saveImgs() {
